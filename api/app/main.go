@@ -9,6 +9,7 @@ import (
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humago"
 	_ "github.com/danielgtaylor/huma/v2/formats/cbor"
+	"github.com/rs/cors"
 )
 
 // CalculationInput represents the request body for the calculation operation.
@@ -48,6 +49,17 @@ func main() {
 		return resp, nil
 	})
 
+	// 3. Configure CORS options
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"}, // Replace with your frontend URL
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
+
+	// 4. Wrap the Mux with the CORS middleware
+	handler := c.Handler(router)
+
 	// Start the server!
-	http.ListenAndServe("127.0.0.1:8888", router)
+	http.ListenAndServe("0.0.0.0:8888", handler)
 }

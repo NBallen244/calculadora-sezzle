@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./api/app # Path to your Go project
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      - PORT=8888
+
+  frontend:
+    build:
+      context: ./front/calculator_app # Path to your Next.js project
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    depends_on:
+      - backend
