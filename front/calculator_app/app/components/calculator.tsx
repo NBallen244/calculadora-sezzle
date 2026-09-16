@@ -54,6 +54,7 @@ const Calculator: React.FC = () => {
     try {
       const responseResult = await calculateExpression(sanitizedOperation);
       setResult(responseResult);
+      setDisplay(responseResult);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: unknown | any) {
       if (err instanceof Error) {
