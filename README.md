@@ -131,7 +131,34 @@ cd front/calculator_app
 npm test
 ```
 
-The frontend suite covers the calculator component's handlers and render branches with the API service mocked, at 100% statement/branch/line coverage of `calculator.tsx`.
+The frontend suite covers the calculator component's handlers and render branches with the API service mocked.
+
+### Coverage reports
+
+Both suites collect coverage automatically when run with the commands above. Current results:
+
+**Backend** — `go test ./... -cover`
+
+| Package                       | Statement coverage |
+|-------------------------------|--------------------|
+| `calculator_backend/parser`   | 96.1%              |
+| `calculator_backend` (`main`) | 0.0% (no tests — HTTP wiring only) |
+
+The `parser` package holds all evaluation logic and is the meaningful target; `main.go` is thin HTTP/CORS setup and is intentionally left untested. To generate an HTML report:
+
+```bash
+cd api/app
+go test ./parser -coverprofile=coverage.out
+go tool cover -html=coverage.out
+```
+
+**Frontend** — `npm test` (Jest, coverage enabled in `jest.config.ts`)
+
+| File             | % Stmts | % Branch | % Funcs | % Lines |
+|------------------|---------|----------|---------|---------|
+| `calculator.tsx` | 100     | 100      | 70.58   | 100     |
+
+18 tests, all passing. Statement, branch, and line coverage are at 100%; the uncovered functions are the intentionally out-of-scope no-op empty button handler and the non-`Error` catch branch. Coverage is scoped to `calculator.tsx` via `collectCoverageFrom` and written to `front/calculator_app/coverage/` (an `lcov-report/index.html` is generated there for browsing).
 
 ## Design decisions
 
